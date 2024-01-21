@@ -14,9 +14,6 @@
 #define __LED_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "types.h"
-#include "stm32f1xx_hal.h"
-#include "stm32f103xb.h"
 
 /** @addtogroup BSP
   * @{
