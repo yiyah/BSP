@@ -1,9 +1,7 @@
 #ifndef __IIC_H
 #define __IIC_H
 
-#include "types.h"
-#include "stm32f1xx_hal.h"
-#include "stm32f103xb.h"
+#include "stm32f103xb.h"        // for GPIO_TypeDef
 
 
 typedef struct IIC_BUS_s
@@ -26,5 +24,6 @@ typedef struct IIC_device_s
 
 
 extern IIC_BUS_t iic_swBus;
+void BSP_IIC_Init();
 
 #endif

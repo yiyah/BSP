@@ -1,31 +1,133 @@
-#include "iic.h"
+/* Includes ------------------------------------------------------------------*/
+#include "stm32f1xx_hal.h"
+#include "types.h"
 #include "util.h"
+#include "iic.h"
 
+/** @addtogroup BSP
+  * @{
+  */
+
+/** @defgroup IIC IIC
+  * @brief IIC BSP driver
+  * @{
+  */
+
+/* Private typedef -----------------------------------------------------------*/
+/** @defgroup IIC_Private_typedef IIC Private typedef
+  * @{
+  */
+
+/**
+ * @brief IIC Acknowledge
+ */
 typedef enum
 {
     IIC_ACK     = 0,
     IIC_NACK    = 1
 } IIC_ACK_TypeDef;
 
+/**
+ * @brief IIC Command
+ */
 typedef enum
 {
     IIC_WRITE   = 0,
     IIC_READ    = 1
 } IIC_CMD_TypeDef;
 
+/**
+ * @brief IIC Status
+ */
 typedef enum
 {
     IIC_OK      = 0,
     IIC_ERR     = 1
 } IIC_STATUS_TypeDef;
 
-/** SCL, SDA need to configured as OD mode */
+/**
+  * @} end of IIC_Private_typedef
+  */
+/* Private define ------------------------------------------------------------*/
+/* Private macro -------------------------------------------------------------*/
+/**
+ * @defgroup IIC_Private_macro IIC Private macro
+ */
+/**
+ * @brief  Set the IIC SCL pin
+ * 
+ * @note   This macro must be used after initializing the pin to OD mode.
+ * 
+ * @param  port: GPIOx
+ * @param  pin: GPIO_PIN_x
+ * 
+ * @retval None
+*/
 #define IIC_SCL_Set(port, pin)      HAL_GPIO_WritePin(port, pin, GPIO_PIN_SET)
+
+/**
+ * @brief  Reset the IIC SCL pin
+ * 
+ * @note   This macro must be used after initializing the pin to OD mode.
+ * 
+ * @param  port: GPIOx
+ * @param  pin: GPIO_PIN_x
+ * 
+ * @retval None
+*/
 #define IIC_SCL_Reset(port, pin)    HAL_GPIO_WritePin(port, pin, GPIO_PIN_RESET)
+
+/**
+ * @brief  Set the IIC SDA pin
+ * 
+ * @note   This macro must be used after initializing the pin to OD mode.
+ * 
+ * @param  port: GPIOx
+ * @param  pin: GPIO_PIN_x
+ * 
+ * @retval None
+*/
 #define IIC_SDA_Set(port, pin)      HAL_GPIO_WritePin(port, pin, GPIO_PIN_SET)
+
+/**
+ * @brief  Reset the IIC SDA pin
+ * 
+ * @note   This macro must be used after initializing the pin to OD mode.
+ * 
+ * @param  port: GPIOx
+ * @param  pin: GPIO_PIN_x
+ * 
+ * @retval None
+*/
 #define IIC_SDA_Reset(port, pin)    HAL_GPIO_WritePin(port, pin, GPIO_PIN_RESET)
+
+/**
+ * @brief  Read the IIC SDA pin
+ * 
+ * @param  port: GPIOx
+ * @param  pin: GPIO_PIN_x
+ * 
+ * @retval The value of the IIC SDA pin.
+*/
 #define IIC_SDA_ReadPin(port, pin)  HAL_GPIO_ReadPin(port, pin)
-#define IIC_Delay()                 do{ \
+
+/**
+ * @brief   This macro provides a delay of approximately 5us
+ * 
+ * @note    This delay will only work properly at a frequency of 72MHz.
+ *
+ * @details The working principle of this macro is to use NOP() to occupy
+ *          one clock cycle of the CPU. Therefore, at a frequency of 72MHz,
+ *          the time to execute one instruction is 1/72M.
+ *          So, performing __NOP() 72 times takes 1 microsecond.
+ *          At the same time, using a for() loop will use jump instructions,
+ *          which will add extra time consumption. In order to get closer to
+ *          1 microsecond, the number of for() loop iterations should be reduced.
+ *          The corresponding NOP() should be added/removed according to the CPU frequency.
+ * 
+ * @retval  None
+*/
+#define IIC_Delay()                 do { \
                                         u8 _i; \
                                         for(_i = 0;_i < 5; _i++){ \
                                             __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP(); \
@@ -37,17 +139,32 @@ typedef enum
                                             __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP(); \
                                             __NOP();__NOP(); \
                                         } \
-                                    }while(0)
+                                    } while(0)
 
-#define CHECK_IIC_ACK(iic_bus)      do{ \
+/**
+ * @brief  Check IIC acknowledge if is ack
+ * 
+ * @note   Be careful not to include this macro in if(). At the same time,
+ *         return causes the function that calls the macro to end prematurely.
+ * 
+ * @retval None
+ */
+#define CHECK_IIC_ACK(iic_bus)      do { \
                                         if(IIC_NACK == BSP_IIC_readAck(iic_bus)) \
                                         { \
                                             BSP_IIC_Stop(iic_bus); \
                                             return IIC_ERR; \
                                         } \
-                                    }while(0)
-
+                                    } while(0)
+/**
+  * @} end of IIC_Private_macro
+  */
+/* Private variables ---------------------------------------------------------*/
+/* Exported variables --------------------------------------------------------*/
 IIC_BUS_t iic_swBus;
+
+/* Private function prototypes -----------------------------------------------*/
+/* Private functions ---------------------------------------------------------*/
 
 static void BSP_IIC_sendAck(IIC_BUS_t *iic)
 {
@@ -164,7 +281,6 @@ static IIC_ACK_TypeDef BSP_IIC_readAck(IIC_BUS_t *iic)
     return ack;
 }
 
-
 static IIC_STATUS_TypeDef BSP_IIC_Write(u8 *devAddr, u8 reg, u8 len, u8 *data)
 {
     u8 i;
@@ -209,6 +325,8 @@ static IIC_STATUS_TypeDef BSP_IIC_Read(u8 *devAddr, u8 reg, u8 len, u8 *data)
     return IIC_OK;
 }
 
+/* Exported functions --------------------------------------------------------*/
+
 void BSP_IIC_Init()
 {
     iic_swBus.port_of_clk   = GPIOB;
@@ -219,3 +337,11 @@ void BSP_IIC_Init()
     iic_swBus.write = BSP_IIC_Write;
     iic_swBus.read  = BSP_IIC_Read;
 }
+
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
