@@ -1,23 +1,32 @@
 /**
- * @file    led.c
- * @author  yiyah (yiyah@github.com)
- * @brief   LED BSP module driver.
- * @version 0.1
- * @date    2024-01-14
- * 
- * @copyright Copyright (c) 2024
- * 
- @verbatim
- ==============================================================================
-                        ##### How to use this driver #####
- ==============================================================================
- [..]
-   (#) step1: Define the GPIO info of LED and its work state in LEDs[].
+  ******************************************************************************
+  * @file    led.c
+  * @author  yiyah (yiyah@github.com)
+  * @brief   LED BSP module driver.
+  * @version 0.1
+  * @date    2024-01-14
+  * 
+  * @copyright Copyright (c) 2024
+  * 
+  ******************************************************************************
+  @verbatim
+  ==============================================================================
+                         ##### How to use this driver #####
+  ==============================================================================
+  [..]
+    (#) step1: Define the GPIO info of LED and its work state in LEDs[].
 
-   (#) step2: Define the LED index in enum LED_Type.
-              It must be in the same order as defined in LEDs[].
- @endverbatim
- */
+    (#) step2: Define the LED index in enum LED_Type.
+               It must be in the same order as defined in LEDs[].
+
+                         ##### About Pin #####
+  ==============================================================================
+  [..]
+    (#) Please note that need to init GPIO before use this driver !!!
+
+  @endverbatim
+  ******************************************************************************
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
@@ -52,6 +61,9 @@ typedef struct
     GPIO_PinState   work;           /*!< the pin is high or low when LED is on */
 } LED_TypeDef;
 
+/**
+ * @brief LED Hardware definition
+ */
 const LED_TypeDef LEDs[] = {
     {GPIOA, GPIO_PIN_4, GPIO_PIN_SET}   /*!< LED_BLUE */
 };
