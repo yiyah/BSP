@@ -36,6 +36,8 @@
  * fabsf(float x)
  * min(int a, int b)
  */
+#define MPU6050
+
 #if defined MOTION_DRIVER_TARGET_MSP430
 #include "msp430.h"
 #include "msp430_i2c.h"
@@ -101,6 +103,26 @@ static inline int reg_int_cb(struct int_param_s *int_param)
 /* UC3 is a 32-bit processor, so abs and labs are equivalent. */
 #define labs        abs
 #define fabs(x)     (((x)>0)?(x):-(x))
+#elif defined EMPL_TARGET_STM32F103
+#include "stm32f1xx_hal.h"
+#include "mpu6050.h"
+
+#define i2c_write(addr, reg, len, data)     BSP_MPU6050_Write(reg, len, data)
+#define i2c_read(addr, reg, len, data)      BSP_MPU6050_Read(reg, len, data)
+#define delay_ms                            HAL_Delay
+#define get_ms                              stm32_get_clock_ms
+static inline int reg_int_cb(struct int_param_s *int_param)
+{
+    // return msp430_reg_int_cb(int_param->cb, int_param->pin, int_param->lp_exit,
+        // int_param->active_low);
+    return 0;
+}
+#define log_i(...)                          do {} while (0)
+#define log_e(...)                          do {} while (0)
+/* labs is already defined by TI's toolchain. */
+/* fabs is for doubles. fabsf is for floats. */
+#define fabs                                fabsf
+#define min(a,b)                            ((a<b)?a:b)
 #else
 #error  Gyro driver is missing the system layer implementations.
 #endif
@@ -2778,6 +2800,15 @@ lp_int_restore:
 #endif
 
     st.chip_cfg.int_motion_only = 0;
+    return 0;
+}
+
+int stm32_get_clock_ms(unsigned long *count)
+{
+    if (!count)
+        return 1;
+
+    *count = HAL_GetTick();
     return 0;
 }
 
