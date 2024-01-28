@@ -1,8 +1,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"                  // for HAL_Delay()
+#include "mpu6050.h"
 #include "iic.h"
 #include "inv_mpu.h"
-#include "mpu6050.h"
 
 /** @addtogroup BSP
   * @{
