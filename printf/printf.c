@@ -33,3 +33,39 @@ PUTCHAR_PROTOTYPE
 }
 
 /* Exported functions --------------------------------------------------------*/
+// #define USE_BSP_PRINTF
+#ifdef USE_BSP_PRINTF
+#include <stdarg.h>
+#include <stdio.h>          // for vsnprintf()
+#define PRINTF_BUFFER_SIZE 128
+char _PRINTF_BUFFER[PRINTF_BUFFER_SIZE];
+void BSP_printf(const char *fmt, ...)
+{
+    u8 len = 0;
+    va_list ap;
+
+    va_start(ap, fmt);
+    // len = vsnprintf(_PRINTF_BUFFER, PRINTF_BUFFER_SIZE, fmt, ap);
+    for(u8 i = 0; i < PRINTF_BUFFER_SIZE; i++)
+    {
+        if('%' == *fmt)
+        {
+
+        }
+        else
+        {
+            len++;
+            _PRINTF_BUFFER[i] = *fmt;
+            if (*fmt++ == 0)
+            {
+                _PRINTF_BUFFER[i+1] = 0;
+                break;
+            }
+        }
+    }
+
+    va_end(ap);
+
+    HAL_UART_Transmit(&huart1, (u8 *)_PRINTF_BUFFER, len, 0xFFFF);
+}
+#endif
