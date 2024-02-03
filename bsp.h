@@ -1,8 +1,7 @@
-#ifndef __BSP_H__
-#define __BSP_H__
+#ifndef __BSP_H
+#define __BSP_H
 
 #include "types.h"
-#include "led.h"
-#include "iic.h"
+#include "bsp_conf.h"
 
 #endif
