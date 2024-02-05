@@ -59,11 +59,11 @@
 #define BSP_log_d(fmt, ...)     BSP_log_printf(LOG_LVL_DEBUG, fmt, ##__VA_ARGS__)
 #define BSP_log_v(fmt, ...)     BSP_log_printf(LOG_LVL_VERBOSE, fmt, ##__VA_ARGS__)
 
-#define log_e(fmt, ...)         BSP_log_e(LOG_TAG fmt, ##__VA_ARGS__)
-#define log_w(fmt, ...)         BSP_log_w(LOG_TAG fmt, ##__VA_ARGS__)
-#define log_i(fmt, ...)         BSP_log_i(LOG_TAG fmt, ##__VA_ARGS__)
-#define log_d(fmt, ...)         BSP_log_d(LOG_TAG fmt, ##__VA_ARGS__)
-#define log_v(fmt, ...)         BSP_log_v(LOG_TAG fmt, ##__VA_ARGS__)
+#define log_e(fmt, ...)         BSP_log_e(fmt, ##__VA_ARGS__)
+#define log_w(fmt, ...)         BSP_log_w(fmt, ##__VA_ARGS__)
+#define log_i(fmt, ...)         BSP_log_i(fmt, ##__VA_ARGS__)
+#define log_d(fmt, ...)         BSP_log_d(fmt, ##__VA_ARGS__)
+#define log_v(fmt, ...)         BSP_log_v(fmt, ##__VA_ARGS__)
 /**
   * @}
   */
