@@ -3,7 +3,7 @@
 #define __MPU6050_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "types.h"
+#include "types.h"      /*!< for include in inv_mpu.c */
 
 /** @addtogroup BSP
   * @{
@@ -20,7 +20,7 @@
   * @{
   */
 
-void BSP_MPU6050_Init();
+u8 BSP_MPU6050_Init();
 u8 BSP_MPU6050_Write(u8 reg, u8 len, u8 *data);
 u8 BSP_MPU6050_Read(u8 reg, u8 len, u8 *data);
 

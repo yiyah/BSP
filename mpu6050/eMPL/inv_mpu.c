@@ -17,8 +17,8 @@
  *                  MPU9150 (or MPU6050 w/ AK8975 on the auxiliary bus)
  *                  MPU9250 (or MPU6500 w/ AK8963 on the auxiliary bus)
  */
-#include <stdio.h>
-#include <stdint.h>
+// #include <stdio.h>
+// #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
