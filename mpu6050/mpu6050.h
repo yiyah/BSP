@@ -23,7 +23,7 @@
 u8 BSP_MPU6050_Init();
 u8 BSP_MPU6050_Write(u8 reg, u8 len, u8 *data);
 u8 BSP_MPU6050_Read(u8 reg, u8 len, u8 *data);
-
+u8 BSP_MPU6050_DMP_Get_Angle(float *pitch, float *roll, float *yaw);
 /**
   * @}
   */
