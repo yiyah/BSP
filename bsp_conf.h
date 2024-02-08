@@ -9,6 +9,7 @@
 #define BSP_IIC_MODULE_ENABLED
 #define BSP_LED_MODULE_ENABLED
 #define BSP_DEBUG_MODULE_ENABLED
+#define BSP_MPU6050_MODULE_ENABLED
 
 /* Includes ------------------------------------------------------------------*/
 /**
@@ -25,5 +26,9 @@
 #ifdef BSP_DEBUG_MODULE_ENABLED
 #include "log.h"
 #endif /* BSP_DEBUG_MODULE_ENABLED */
+
+#ifdef BSP_MPU6050_MODULE_ENABLED
+#include "mpu6050.h"
+#endif /* BSP_MPU6050_MODULE_ENABLED */
 
 #endif /* __BSP_CONF_H */

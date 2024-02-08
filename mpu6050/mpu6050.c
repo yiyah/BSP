@@ -304,10 +304,10 @@ void BSP_MPU6050_SW_Reset()
 /**
  * @brief  Get pitch, roll, yaw angle from DMP 
  * 
- * @note   The frequency of reading the data in the FIFO must be the same as 
+ * @note   The frequency of reading the data in the FIFO must be the same as
  *         defined by DEFAULT_MPU6050_HZ, otherwise the read will fail.
  *           -# Too fast: MPU6050 has not been sampled, no data is available in the FIFO.
- *           -# Too slow: The FIFO overflows.
+ *           -# Too slow: The FIFO overflows. And the FIFO buffer is emptied in dmp_read_fifo();
  *
  * @param[out] pitch Angle of pitch
  * @param[out] roll  Angle of roll
@@ -328,7 +328,7 @@ u8 BSP_MPU6050_DMP_Get_Angle(f32 *pitch, f32 *roll, f32 *yaw)
     unsigned long sensor_timestamp;
     u8 more;
     long quat[4];
-
+    
     if (0 == dmp_read_fifo(gyro, accel, quat, &sensor_timestamp, &sensors, &more))
     {
         if (sensors & INV_WXYZ_QUAT)
@@ -351,7 +351,7 @@ u8 BSP_MPU6050_DMP_Get_Angle(f32 *pitch, f32 *roll, f32 *yaw)
             res = MPU6050_FIFO_NO_QUAT;
         }
     }
-    else
+        else
     {
         /*
          * If we reach this point, it indicates that we are 
