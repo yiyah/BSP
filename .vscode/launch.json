@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "stm32 Cortex Debug",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/${workspaceFolderBasename}.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "runToEntryPoint": "main",
+            "servertype": "openocd",
+            "configFiles": [
+                "${workspaceFolder}/debug_env/openocd.cfg"
+            ],
+            "preLaunchTask": "build stm32",
+            "svdFile": "${workspaceFolder}/debug_env/svd/STM32F103.svd",
+            "showDevDebugOutput": "none"
+        }
+    ]
+} 
