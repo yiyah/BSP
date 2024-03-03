@@ -65,7 +65,7 @@ typedef struct
  * @brief LED Hardware definition
  */
 const LED_TypeDef LEDs[] = {
-    {GPIOA, GPIO_PIN_4, GPIO_PIN_SET}   /*!< LED_BLUE */
+    {GPIOA, GPIO_PIN_4, GPIO_PIN_RESET}   /*!< LED_BLUE */
 };
 
 /**

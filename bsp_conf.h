@@ -10,6 +10,7 @@
 #define BSP_LED_MODULE_ENABLED
 #define BSP_DEBUG_MODULE_ENABLED
 #define BSP_MPU6050_MODULE_ENABLED
+#define BSP_MOTOR_MODULE_ENABLED
 
 /* Includes ------------------------------------------------------------------*/
 /**
@@ -30,5 +31,9 @@
 #ifdef BSP_MPU6050_MODULE_ENABLED
 #include "mpu6050.h"
 #endif /* BSP_MPU6050_MODULE_ENABLED */
+
+#ifdef BSP_MOTOR_MODULE_ENABLED
+#include "motor.h"
+#endif /* BSP_MOTOR_MODULE_ENABLED */
 
 #endif /* __BSP_CONF_H */
