@@ -94,6 +94,8 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   MX_TIM1_Init();
+  MX_TIM2_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
   BSP_LED_ON(LED_BLUE);
   HAL_Delay(200);
