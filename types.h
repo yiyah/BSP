@@ -17,5 +17,7 @@ typedef signed   int            s32;
 typedef float                   f32;
 
 #define NULL                    ((void *)0)
+#define TRUE                    1U
+#define FALSE                   0U
 
 #endif

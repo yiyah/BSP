@@ -11,6 +11,7 @@
 #define BSP_DEBUG_MODULE_ENABLED
 #define BSP_MPU6050_MODULE_ENABLED
 #define BSP_MOTOR_MODULE_ENABLED
+#define BSP_ENCODER_MODULE_ENABLED
 
 /* Includes ------------------------------------------------------------------*/
 /**
@@ -35,5 +36,9 @@
 #ifdef BSP_MOTOR_MODULE_ENABLED
 #include "motor.h"
 #endif /* BSP_MOTOR_MODULE_ENABLED */
+
+#ifdef BSP_ENCODER_MODULE_ENABLED
+#include "encoder.h"
+#endif /* BSP_ENCODER_MODULE_ENABLED */
 
 #endif /* __BSP_CONF_H */
