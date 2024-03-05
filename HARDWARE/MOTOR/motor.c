@@ -70,12 +70,11 @@ typedef struct motor_s
   * @}
   */
 /* Private define ------------------------------------------------------------*/
-/** @defgroup MOTOR_Private_define MOTOR Private define
+/** @defgroup MOTOR_Private_Constants MOTOR Private Constants
   * @{
   */
 #define LEFT                0U
 #define RIGHT               1U
-#define MOTOR_PWM_ARR       (7200U - 1U)        /*!< need to sync with timer's period */
 /**
   * @}
   */

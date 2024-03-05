@@ -308,7 +308,9 @@ void BSP_MPU6050_SW_Reset()
  *         defined by DEFAULT_MPU6050_HZ, otherwise the read will fail.
  *           -# Too fast: MPU6050 has not been sampled, no data is available in the FIFO.
  *           -# Too slow: The FIFO overflows. And the FIFO buffer is emptied in dmp_read_fifo();
- *
+ * 
+ * @note   This function may take 6ms in 72MHz chip.
+ * 
  * @param[out] pitch Angle of pitch
  * @param[out] roll  Angle of roll
  * @param[out] yaw   Angle of yaw
@@ -351,7 +353,7 @@ u8 BSP_MPU6050_DMP_Get_Angle(f32 *pitch, f32 *roll, f32 *yaw)
             res = MPU6050_FIFO_NO_QUAT;
         }
     }
-        else
+    else
     {
         /*
          * If we reach this point, it indicates that we are 
