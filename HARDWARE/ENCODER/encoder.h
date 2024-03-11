@@ -19,12 +19,15 @@
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
+#define BSP_Get_Encoder_Count(l_cnt, r_cnt)                 BSP_Get_Timer_Count(l_cnt, r_cnt, 0)
+#define BSP_Get_Encoder_Count_PerUnitTime(l_cnt, r_cnt)     BSP_Get_Timer_Count(l_cnt, r_cnt, 1)
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup ENCODER_Exported_functions
   * @{
   */
 void BSP_InitEncoder();
-void BSP_Get_Encoder_Count(s16 *l_cnt, s16 *r_cnt);
+void BSP_Get_Timer_Count(s16 *l_cnt, s16 *r_cnt, u8 mode);
+void BSP_Encoder_Clear();
 /**
   * @}
   */

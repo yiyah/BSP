@@ -105,8 +105,11 @@ void BSP_InitEncoder()
  * @note  The parameters have negative, representing the direction.
  * @param[out] l_cnt left counter
  * @param[out] r_cnt right couter
+ * @param[in]  mode  Whether to clear the counter
+ *               @arg 0: donot clear counter
+ *               @arg 1: clear counter
  */
-void BSP_Get_Encoder_Count(s16 *l_cnt, s16 *r_cnt)
+void BSP_Get_Timer_Count(s16 *l_cnt, s16 *r_cnt, u8 mode)
 {
     *l_cnt = __HAL_TIM_GET_COUNTER(encoder[LEFT].htim);
     *r_cnt = __HAL_TIM_GET_COUNTER(encoder[RIGHT].htim);
@@ -119,6 +122,12 @@ void BSP_Get_Encoder_Count(s16 *l_cnt, s16 *r_cnt)
     {
         *r_cnt = -*r_cnt;
     }
+
+    if (1U == mode)
+    {
+        __HAL_TIM_SET_COUNTER(encoder[LEFT].htim, 0);
+        __HAL_TIM_SET_COUNTER(encoder[RIGHT].htim, 0);
+    }
 }
 
 /**
@@ -127,7 +136,6 @@ void BSP_Get_Encoder_Count(s16 *l_cnt, s16 *r_cnt)
 /**
   * @}
   */
-
 /**
   * @}
   */
