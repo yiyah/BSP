@@ -45,7 +45,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-s16 l,r;
+s16 l,r, lc, rc;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -61,7 +61,9 @@ static void Setup_Hardware()
     BSP_IIC_Init();
     BSP_MPU6050_Init();
     BSP_InitMotor();
+    BSP_InitEncoder();
 }
+
 /* USER CODE END 0 */
 
 /**
@@ -96,21 +98,21 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM2_Init();
   MX_TIM4_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
   BSP_LED_ON(LED_BLUE);
   HAL_Delay(200);
   BSP_LED_OFF(LED_BLUE);
   Setup_Hardware();
+  HAL_TIM_Base_Start_IT(&htim3);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
     while (1)
     {
-        // BSP_LED_ON(LED_BLUE);
-        // HAL_Delay(100);
-        // BSP_LED_OFF(LED_BLUE);
         BSP_SetMotorPWMPulse(l, r);
+        // BSP_SetMotorPWM(0, 20);
         if(0 == BSP_MPU6050_DMP_Get_Angle(&pitch, &roll, &yaw))
         {
             /* It comes in once every 5~6ms */
