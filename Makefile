@@ -201,7 +201,7 @@ $(BUILD_DIR):
 
 
 download: all
-	openocd -f interface/cmsis-dap.cfg -f target/stm32f1x.cfg -c init -c "halt;flash write_image erase $(shell pwd)/build/${TARGET}.elf" -c reset -c shutdown
+	openocd -f interface/cmsis-dap.cfg -f target/stm32f1x.cfg -c "transport select swd" -c init -c "reset halt;wait_halt;flash write_image erase $(shell pwd)/build/${PROJECT}.elf" -c reset -c shutdown
 
 doxygen:
 	doxygen doxygen/Doxyfile
