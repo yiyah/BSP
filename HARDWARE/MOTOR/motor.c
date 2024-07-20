@@ -156,8 +156,8 @@ void BSP_SetMotorPWMPulse(s16 l_pulse, s16 r_pulse)
     else
     {
         r_pulse = -r_pulse;
-        HAL_GPIO_WritePin(motor[RIGHT].IN1.GPIOx, motor[RIGHT].IN1.GPIO_Pin, GPIO_PIN_RESET);
-        HAL_GPIO_WritePin(motor[RIGHT].IN2.GPIOx, motor[RIGHT].IN2.GPIO_Pin, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(motor[RIGHT].IN1.GPIOx, motor[RIGHT].IN1.GPIO_Pin, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(motor[RIGHT].IN2.GPIOx, motor[RIGHT].IN2.GPIO_Pin, GPIO_PIN_RESET);
     }
     /* set pwm pulse */
     __HAL_TIM_SET_COMPARE(motor[LEFT].htim, motor[LEFT].channel, l_pulse);
