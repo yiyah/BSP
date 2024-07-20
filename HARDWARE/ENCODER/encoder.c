@@ -114,15 +114,6 @@ void BSP_Get_Timer_Count(s16 *l_cnt, s16 *r_cnt, u8 mode)
     *l_cnt = __HAL_TIM_GET_COUNTER(encoder[LEFT].htim);
     *r_cnt = __HAL_TIM_GET_COUNTER(encoder[RIGHT].htim);
 
-    if(TRUE == __HAL_TIM_IS_TIM_COUNTING_DOWN(encoder[LEFT].htim))
-    {
-        *l_cnt = -*l_cnt;
-    }
-    if(TRUE == __HAL_TIM_IS_TIM_COUNTING_DOWN(encoder[RIGHT].htim))
-    {
-        *r_cnt = -*r_cnt;
-    }
-
     if (1U == mode)
     {
         __HAL_TIM_SET_COUNTER(encoder[LEFT].htim, 0);
