@@ -25,6 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "bsp.h"
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -73,7 +74,7 @@ static void Setup_Hardware()
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-    float pitch, roll, yaw;
+  float pitch, roll, yaw;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -111,7 +112,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
     while (1)
     {
-        BSP_SetMotorPWMPulse(l, r);
+        // BSP_SetMotorPWMPulse(l, r);
         // BSP_SetMotorPWM(0, 20);
         if(0 == BSP_MPU6050_DMP_Get_Angle(&pitch, &roll, &yaw))
         {
@@ -119,7 +120,7 @@ int main(void)
             // log_d("asdf\n");
             // log_d("pitch = %f, roll = %f, yaw = %f\n", (pitch),  (roll),  (yaw));
         }
-
+        printf(":%c\n", UART_u8RX_BUFFER[0]);
         // BSP_LED_Toggle(LED_BLUE);
         // HAL_Delay(1);
     /* USER CODE END WHILE */
