@@ -120,7 +120,11 @@ int main(void)
             // log_d("asdf\n");
             // log_d("pitch = %f, roll = %f, yaw = %f\n", (pitch),  (roll),  (yaw));
         }
-        printf(":%c\n", UART_u8RX_BUFFER[0]);
+        
+        if (BSP_RECEIVE_u8GetBuffer() != -1)
+        {
+            printf(":%s\n", RECEIVE_u8Buffer);
+        }
         // BSP_LED_Toggle(LED_BLUE);
         // HAL_Delay(1);
     /* USER CODE END WHILE */

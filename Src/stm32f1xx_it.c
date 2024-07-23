@@ -236,7 +236,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     if (huart->Instance == USART1)
     {
         /* add logic here */
-        
+        BSP_RECEIVE_u8Parse_Protocol(UART_u8RX_BUFFER[0]);
     }
     else
     {
