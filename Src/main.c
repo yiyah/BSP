@@ -106,10 +106,12 @@ int main(void)
   BSP_LED_OFF(LED_BLUE);
   Setup_Hardware();
   HAL_TIM_Base_Start_IT(&htim3);
+  BSP_RECEIVE_vInit();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+    s8 ret = 0;
     while (1)
     {
         // BSP_SetMotorPWMPulse(l, r);
@@ -120,10 +122,10 @@ int main(void)
             // log_d("asdf\n");
             // log_d("pitch = %f, roll = %f, yaw = %f\n", (pitch),  (roll),  (yaw));
         }
-        
-        if (BSP_RECEIVE_u8GetBuffer() != -1)
+        ret = BSP_RECEIVE_u8GetBuffer();
+        if (ret != -1)
         {
-            printf(":%s\n", RECEIVE_u8Buffer);
+            printf(":%d: %s\n", ret, RECEIVE_u8Buffer);
         }
         // BSP_LED_Toggle(LED_BLUE);
         // HAL_Delay(1);
