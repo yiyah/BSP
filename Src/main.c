@@ -112,6 +112,7 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
     s8 ret = 0;
+    u8 *pdata = NULL;
     while (1)
     {
         // BSP_SetMotorPWMPulse(l, r);
@@ -122,10 +123,10 @@ int main(void)
             // log_d("asdf\n");
             // log_d("pitch = %f, roll = %f, yaw = %f\n", (pitch),  (roll),  (yaw));
         }
-        ret = BSP_RECEIVE_u8GetBuffer();
+        ret = BSP_RECEIVE_u8GetBuffer(&pdata);
         if (ret != -1)
         {
-            printf(":%d: %s\n", ret, RECEIVE_u8Buffer);
+            printf(":%d: %s\n", ret, pdata);
         }
         // BSP_LED_Toggle(LED_BLUE);
         // HAL_Delay(1);

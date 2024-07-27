@@ -22,6 +22,8 @@ typedef struct
 } RECEIVE_TypdDef;
 /* Private define ------------------------------------------------------------*/
 
+#define RECEIVE_BUFFER_SIZE         16u
+
 #define REC_STA_INIT                1u
 #define REC_STA_IDLE                2u
 #define REC_STA_RECEIVING_HEAD      3u
@@ -37,7 +39,7 @@ typedef struct
 
 static RECEIVE_TypdDef g_rec;
 
-u8 RECEIVE_u8Buffer[RECEIVE_BUFFER_SIZE];
+static u8 g_u8Buffer[RECEIVE_BUFFER_SIZE];
 
 #if (ENABLE_FRAME_HEAD == TRUE)
 static u8 g_arrDATA_FRAME_HEAD[] = "$$";              /* this can be NULL */
@@ -48,7 +50,7 @@ static u8 g_arrDATA_FRAME_END[]  = "\r\n";            /* this cannot be NULL */
 
 void onIDLEState(u8 byte)
 {
-    g_rec.pu8BuffWriteIndex = RECEIVE_u8Buffer;
+    g_rec.pu8BuffWriteIndex = g_u8Buffer;
 #if (ENABLE_FRAME_HEAD == TRUE)
     g_rec.pu8FrameHeadAndEnd = g_arrDATA_FRAME_HEAD;
     g_rec.state = REC_STA_RECEIVING_HEAD;
@@ -100,7 +102,7 @@ void onReceivingFrameHead(u8 byte)
 
 void onReceivingDATA(u8 byte)
 {
-    g_rec.lenOfdata = g_rec.pu8BuffWriteIndex - RECEIVE_u8Buffer;
+    g_rec.lenOfdata = g_rec.pu8BuffWriteIndex - g_u8Buffer;
 
     if (*g_rec.pu8FrameHeadAndEnd == byte)
     {
@@ -119,7 +121,7 @@ void onReceivingDATA(u8 byte)
             /* point to frame end for the next receive */
             g_rec.pu8FrameHeadAndEnd = g_arrDATA_FRAME_END;
             #endif
-            g_rec.pu8BuffWriteIndex = RECEIVE_u8Buffer;
+            g_rec.pu8BuffWriteIndex = g_u8Buffer;
             g_rec.state = REC_STA_IDLE;
         }
         else
@@ -157,7 +159,7 @@ void onReceivingFrameEnd(u8 byte)
             /**
                means we had finished receiving.
              */
-            g_rec.pu8BuffWriteIndex = RECEIVE_u8Buffer;
+            g_rec.pu8BuffWriteIndex = g_u8Buffer;
             g_rec.state = REC_STA_IDLE;
         }
         else
@@ -171,7 +173,7 @@ void onReceivingFrameEnd(u8 byte)
          * means we are recving an error frame end,
          * we need to drop it and receive a new frame.
          */
-        g_rec.pu8BuffWriteIndex = RECEIVE_u8Buffer;
+        g_rec.pu8BuffWriteIndex = g_u8Buffer;
         g_rec.lenOfdata = 0;
         g_rec.state = REC_STA_IDLE;
     }
@@ -183,7 +185,7 @@ void BSP_RECEIVE_vInit(void)
 {
     g_rec.state = REC_STA_INIT;
     g_rec.lenOfdata = 0;
-    g_rec.pu8BuffWriteIndex = RECEIVE_u8Buffer;
+    g_rec.pu8BuffWriteIndex = g_u8Buffer;
 #if (ENABLE_FRAME_HEAD == TRUE)
     g_rec.pu8FrameHeadAndEnd = g_arrDATA_FRAME_HEAD;
 #else
@@ -191,12 +193,22 @@ void BSP_RECEIVE_vInit(void)
 #endif
 }
 
-u8 BSP_RECEIVE_u8GetBuffer(void)
+/**
+ * @brief Get the receiver buffer
+ * 
+ * @param[out] pdata the data where to point
+ * @return u8 The return value can be below values
+ *          @arg -1: means the receive buffer is not ready
+ *          @arg ret: the length of data
+ */
+s8 BSP_RECEIVE_u8GetBuffer(u8 **pdata)
 {
-    s8 ret = 0;
+    s8 ret = -1;
 
-    if (g_rec.state == REC_STA_IDLE)
+    if ((g_rec.state == REC_STA_IDLE)
+       && (g_rec.lenOfdata != 0))
     {
+        *pdata = g_u8Buffer;
         ret = g_rec.lenOfdata;
     }
     else
