@@ -51,6 +51,7 @@ HARDWARE/mpu6050/eMPL/inv_mpu_dmp_motion_driver.c \
 HARDWARE/mpu6050/mpu6050.c \
 HARDWARE/MOTOR/motor.c \
 HARDWARE/ENCODER/encoder.c \
+HARDWARE/receive/receive.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c \
@@ -134,6 +135,7 @@ C_INCLUDES =  \
 -IHARDWARE/mpu6050 \
 -IHARDWARE/MOTOR \
 -IHARDWARE/ENCODER \
+-IHARDWARE/receive \
 -IDrivers/STM32F1xx_HAL_Driver/Inc \
 -IDrivers/STM32F1xx_HAL_Driver/Inc/Legacy \
 -IDrivers/CMSIS/Device/ST/STM32F1xx/Include \

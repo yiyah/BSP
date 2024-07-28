@@ -12,6 +12,7 @@
 #define BSP_MPU6050_MODULE_ENABLED
 #define BSP_MOTOR_MODULE_ENABLED
 #define BSP_ENCODER_MODULE_ENABLED
+#define BSP_RECEIVE_MODULE_ENABLED
 
 /* Includes ------------------------------------------------------------------*/
 /**
@@ -40,5 +41,9 @@
 #ifdef BSP_ENCODER_MODULE_ENABLED
 #include "encoder.h"
 #endif /* BSP_ENCODER_MODULE_ENABLED */
+
+#ifdef BSP_RECEIVE_MODULE_ENABLED
+#include "receive.h"
+#endif /* BSP_RECEIVE_MODULE_ENABLED */
 
 #endif /* __BSP_CONF_H */
