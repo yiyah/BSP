@@ -213,7 +213,7 @@ void TIM3_IRQHandler(void)
 
   BSP_Get_Encoder_Count_PerUnitTime(&s16l_curCounter, &s16r_curCounter);
   // pass to control()
-  control(s16l_tartget, s16r_target, s16l_curCounter, s16r_curCounter,
+  control(s16l_target, s16r_target, s16l_curCounter, s16r_curCounter,
           &s16L_output, &s16R_output);
   // set output to motor
   BSP_SetMotorPWMPulse(s16L_output, s16R_output);

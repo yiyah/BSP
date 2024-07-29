@@ -46,7 +46,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-s16 s16l_tartget = 0, s16r_target = 0;
+s16 s16l_target = 0, s16r_target = 0;
 s16 s16l_curCounter = 0, s16r_curCounter = 0;
 /* USER CODE END PV */
 
