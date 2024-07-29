@@ -46,13 +46,15 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-s16 l,r, lc, rc;
+s16 s16l_tartget = 0, s16r_target = 0;
+s16 s16l_curCounter = 0, s16r_curCounter = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+extern void car_Init();
+extern void car_app(const u8 *pdata, u8 len);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -105,6 +107,7 @@ int main(void)
   HAL_Delay(200);
   BSP_LED_OFF(LED_BLUE);
   Setup_Hardware();
+  car_Init();
   HAL_TIM_Base_Start_IT(&htim3);
   BSP_RECEIVE_vInit();
   /* USER CODE END 2 */
@@ -127,6 +130,7 @@ int main(void)
         if (ret != -1)
         {
             printf(":%d: %s\n", ret, pdata);
+            car_app(pdata, ret);
         }
         // BSP_LED_Toggle(LED_BLUE);
         // HAL_Delay(1);

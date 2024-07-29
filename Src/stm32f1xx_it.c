@@ -46,7 +46,9 @@
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-
+extern void control(const s16 l_targetPulse, const s16 r_targetPulse,
+                    const s16 l_curPulse, const s16 r_curPulse,
+                    s16 *l_output, s16 *r_output);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -206,7 +208,15 @@ void SysTick_Handler(void)
 void TIM3_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM3_IRQn 0 */
+  s16 s16L_output = 0;
+  s16 s16R_output = 0;
 
+  BSP_Get_Encoder_Count_PerUnitTime(&s16l_curCounter, &s16r_curCounter);
+  // pass to control()
+  control(s16l_tartget, s16r_target, s16l_curCounter, s16r_curCounter,
+          &s16L_output, &s16R_output);
+  // set output to motor
+  BSP_SetMotorPWMPulse(s16L_output, s16R_output);
   /* USER CODE END TIM3_IRQn 0 */
   HAL_TIM_IRQHandler(&htim3);
   /* USER CODE BEGIN TIM3_IRQn 1 */

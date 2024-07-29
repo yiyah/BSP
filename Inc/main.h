@@ -74,7 +74,8 @@ void Error_Handler(void);
 #define MX_IIC_DATA_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-
+extern s16 s16l_tartget, s16r_target;
+extern s16 s16l_curCounter, s16r_curCounter;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
