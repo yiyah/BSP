@@ -22,13 +22,15 @@ typedef struct
 } RECEIVE_TypdDef;
 /* Private define ------------------------------------------------------------*/
 
-#define RECEIVE_BUFFER_SIZE         16u
+#define RECEIVE_BUFFER_SIZE         16U
 
-#define REC_STA_INIT                1u
-#define REC_STA_IDLE                2u
-#define REC_STA_RECEIVING_HEAD      3u
-#define REC_STA_RECEIVING_DATA      4u
-#define REC_STA_RECEIVING_END       5u
+#define REC_STA_REMAIN              0U          /* never use this */
+#define REC_STA_INIT                1U
+#define REC_STA_IDLE                2U
+#define REC_STA_IDLE_NOT_READED     3U
+#define REC_STA_RECEIVING_HEAD      4U
+#define REC_STA_RECEIVING_DATA      5U
+#define REC_STA_RECEIVING_END       6U
 
 #define ENABLE_FRAME_HEAD           FALSE
 #define NUM_OF_FRAME_HEAD       (sizeof(g_arrDATA_FRAME_HEAD)/g_arrDATA_FRAME_HEAD[0])
@@ -44,7 +46,7 @@ static u8 g_u8Buffer[RECEIVE_BUFFER_SIZE];
 #if (ENABLE_FRAME_HEAD == TRUE)
 static u8 g_arrDATA_FRAME_HEAD[] = "$$";              /* this can be NULL */
 #endif  /* (ENABLE_FRAME_HEAD == TRUE) */
-static u8 g_arrDATA_FRAME_END[]  = "\r\n";            /* this cannot be NULL */
+static u8 g_arrDATA_FRAME_END[]  = "\n";            /* this cannot be NULL */
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -122,7 +124,7 @@ void onReceivingDATA(u8 byte)
             g_rec.pu8FrameHeadAndEnd = g_arrDATA_FRAME_END;
             #endif
             g_rec.pu8BuffWriteIndex = g_u8Buffer;
-            g_rec.state = REC_STA_IDLE;
+            g_rec.state = REC_STA_IDLE_NOT_READED;
         }
         else
         {
@@ -160,7 +162,7 @@ void onReceivingFrameEnd(u8 byte)
                means we had finished receiving.
              */
             g_rec.pu8BuffWriteIndex = g_u8Buffer;
-            g_rec.state = REC_STA_IDLE;
+            g_rec.state = REC_STA_IDLE_NOT_READED;
         }
         else
         {
@@ -205,11 +207,11 @@ s8 BSP_RECEIVE_u8GetBuffer(u8 **pdata)
 {
     s8 ret = -1;
 
-    if ((g_rec.state == REC_STA_IDLE)
-       && (g_rec.lenOfdata != 0))
+    if (g_rec.state == REC_STA_IDLE_NOT_READED)
     {
         *pdata = g_u8Buffer;
         ret = g_rec.lenOfdata;
+        g_rec.state = REC_STA_IDLE;
     }
     else
     {
@@ -224,6 +226,7 @@ u8 BSP_RECEIVE_u8Parse_Protocol(u8 byte)
     {
     case REC_STA_INIT:
     case REC_STA_IDLE:
+    case REC_STA_IDLE_NOT_READED:   /* means we would drop the older data */
         onIDLEState(byte);
         break;
     #if (ENABLE_FRAME_HEAD == TRUE)
