@@ -31,6 +31,8 @@
 #include "stm32f1xx_hal.h"
 #include "tim.h"
 #include "types.h"
+#include "filter.h"
+#include "encoder.h"
 /** @addtogroup BSP
   * @{
   */
@@ -64,6 +66,9 @@ typedef struct encoder_s ENCODER_t;
   */
 #define LEFT                0U
 #define RIGHT               1U
+
+#define FILTER_SIZE         10U
+
 /**
   * @}
   */
@@ -79,6 +84,10 @@ static ENCODER_t encoder[2] = {
     [LEFT] = {&htim2, TIM_CHANNEL_1, TIM_CHANNEL_2},
     [RIGHT] = {&htim4, TIM_CHANNEL_1, TIM_CHANNEL_2}
 };
+
+FILTER_TypeDef g_filter[2] = {0};
+s16 s16filterArrayCNTs[2][FILTER_SIZE] = {0};// 确认这个是不是初始化全0
+
 /**
   * @}
   */
@@ -98,6 +107,13 @@ void BSP_InitEncoder()
     HAL_TIM_Encoder_Start(encoder[LEFT].htim, encoder[LEFT].BChannel);
     HAL_TIM_Encoder_Start(encoder[RIGHT].htim, encoder[RIGHT].AChannel);
     HAL_TIM_Encoder_Start(encoder[RIGHT].htim, encoder[RIGHT].BChannel);
+
+    for (u8 i = 0; i < 2; i++)
+    {
+        g_filter[i].u8Len = 0;
+        g_filter[i].ps16data = s16filterArrayCNTs[i];
+        g_filter[i].s32Sum = 0;
+    }
 }
 
 /**
@@ -121,6 +137,16 @@ void BSP_Get_Timer_Count(s16 *l_cnt, s16 *r_cnt, u8 mode)
     }
 }
 
+
+void BSP_Get_FilterCount(s16 *s16L_filterCNT, s16 *s16R_filterCNT)
+{
+    s16 s16L_cnt = 0, s16R_cnt = 0;
+
+    BSP_Get_Encoder_Count_PerUnitTime(&s16L_cnt, &s16R_cnt);
+
+    *s16L_filterCNT = UTIL_s16MoveAverageFilter(&g_filter[LEFT], s16L_cnt, FILTER_SIZE);
+    *s16R_filterCNT = UTIL_s16MoveAverageFilter(&g_filter[RIGHT], s16R_cnt, FILTER_SIZE);
+}
 /**
   * @}
   */
