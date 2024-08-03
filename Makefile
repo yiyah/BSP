@@ -52,6 +52,7 @@ HARDWARE/mpu6050/mpu6050.c \
 HARDWARE/MOTOR/motor.c \
 HARDWARE/ENCODER/encoder.c \
 HARDWARE/receive/receive.c \
+HARDWARE/UTIL/filter.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c \
