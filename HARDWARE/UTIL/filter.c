@@ -21,6 +21,8 @@
 
 s16 UTIL_s16MoveAverageFilter(FILTER_TypeDef *filter, s16 value, u8 filterSize)
 {
+    f32 res = 0.0F;
+
     /* sum minus the first saved value */
     filter->s32Sum -= filter->ps16data[filterSize-1];
 
@@ -42,8 +44,18 @@ s16 UTIL_s16MoveAverageFilter(FILTER_TypeDef *filter, s16 value, u8 filterSize)
     {
         /* keep the filter->u8Len equal to filterSize */
     }
+    res = filter->s32Sum / filter->u8Len;
 
-    return (s16)((filter->s32Sum / filter->u8Len)+0.5);
+    /* Rounding */
+    if (res > 0.0)
+    {
+        res += 0.5;
+    }
+    else
+    {
+        res -= 0.5;
+    }
+    return (s16)res;
 }
 
 /**
