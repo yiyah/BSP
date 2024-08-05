@@ -100,6 +100,7 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM4_Init();
   MX_TIM3_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   BSP_LED_ON(LED_BLUE);
   HAL_Delay(200);
