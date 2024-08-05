@@ -76,6 +76,9 @@ void Error_Handler(void);
 /* USER CODE BEGIN Private defines */
 extern s16 s16l_target, s16r_target;
 extern s16 s16l_curCounter, s16r_curCounter;
+extern u8 loop5ms_flag;
+extern float g_f32pitch, g_f32roll, g_f32yaw;
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

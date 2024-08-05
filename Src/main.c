@@ -48,6 +48,9 @@
 /* USER CODE BEGIN PV */
 s16 s16l_target = 0, s16r_target = 0;
 s16 s16l_curCounter = 0, s16r_curCounter = 0;
+u8 loop5ms_flag = 0;
+float g_f32pitch = 0.0, g_f32roll = 0.0, g_f32yaw = 0.0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -76,7 +79,6 @@ static void Setup_Hardware()
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-  float pitch, roll, yaw;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -120,17 +122,23 @@ int main(void)
     {
         // BSP_SetMotorPWMPulse(l, r);
         // BSP_SetMotorPWM(0, 20);
-        if(0 == BSP_MPU6050_DMP_Get_Angle(&pitch, &roll, &yaw))
+        if(0 == BSP_MPU6050_DMP_Get_Angle(&g_f32pitch, &g_f32roll, &g_f32yaw))
         {
             /* It comes in once every 5~6ms */
             // log_d("asdf\n");
             // log_d("pitch = %f, roll = %f, yaw = %f\n", (pitch),  (roll),  (yaw));
+            printf(":%.2f,%.2f,%.2f\n", g_f32pitch, g_f32roll, g_f32yaw);
         }
         ret = BSP_RECEIVE_u8GetBuffer(&pdata);
         if (ret != -1)
         {
-            printf(":%d: %s\n", ret, pdata);
+            // printf(":%d: %s\n", ret, pdata);
             car_app(pdata, ret);
+        }
+        if (loop5ms_flag == 1)
+        {
+            // printf("1:%d,%d,%ld\n", s16l_curCounter, s16l_target, HAL_GetTick());
+            loop5ms_flag = 0;
         }
         // BSP_LED_Toggle(LED_BLUE);
         // HAL_Delay(1);

@@ -46,6 +46,7 @@
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
+extern f32 CAR_f32KeepStandUP(f32 f32target, f32 f32curPitch);
 extern void control(const s16 l_targetPulse, const s16 r_targetPulse,
                     const s16 l_curPulse, const s16 r_curPulse,
                     s16 *l_output, s16 *r_output);
@@ -210,7 +211,11 @@ void TIM3_IRQHandler(void)
   /* USER CODE BEGIN TIM3_IRQn 0 */
   s16 s16L_output = 0;
   s16 s16R_output = 0;
+  
 
+  loop5ms_flag = 1;
+  s16l_target = CAR_f32KeepStandUP(0, g_f32pitch);
+  s16r_target = s16l_target;
   BSP_Get_FilterCount(&s16l_curCounter, &s16r_curCounter);
 
   // pass to control()
