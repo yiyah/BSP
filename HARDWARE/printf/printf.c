@@ -1,4 +1,7 @@
 /* Includes ------------------------------------------------------------------*/
+#include <stdarg.h>     /*!< for va_list */
+#include <stdio.h>      /*!< for vsnprintf */
+#include <string.h>     /*!< for strlen() */
 #include "types.h"
 #include "usart.h"
 
@@ -33,3 +36,24 @@ PUTCHAR_PROTOTYPE
 }
 
 /* Exported functions --------------------------------------------------------*/
+#define BUF_SIZE 128
+s8 printf3(char *fmt, ...)
+{
+    s8 res = 0;
+    va_list args;
+
+    char buf[BUF_SIZE] = {0};
+
+    va_start(args, fmt);
+
+    res = vsnprintf(buf, BUF_SIZE, fmt, args);
+    va_end(args);
+
+    if (res > 0)
+    {
+        HAL_UART_Transmit(&huart3, (u8 *)buf, res, 0xFFFF);
+        while(__HAL_UART_GET_FLAG(&huart3, UART_FLAG_TC) == RESET);
+    }
+
+    return res; 
+}

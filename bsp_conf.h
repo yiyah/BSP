@@ -46,4 +46,6 @@
 #include "receive.h"
 #endif /* BSP_RECEIVE_MODULE_ENABLED */
 
+extern s8 printf3(char *fmt, ...);
+
 #endif /* __BSP_CONF_H */
