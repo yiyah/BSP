@@ -129,7 +129,7 @@ int main(void)
         {
             printf(":%d: %s\n", ret, pdata);
         }
-        // BSP_LED_Toggle(LED_BLUE);
+        BSP_LED_Toggle(LED_BLUE);
         // HAL_Delay(1);
     /* USER CODE END WHILE */
 

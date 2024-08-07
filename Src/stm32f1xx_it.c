@@ -57,6 +57,7 @@
 /* External variables --------------------------------------------------------*/
 extern TIM_HandleTypeDef htim3;
 extern UART_HandleTypeDef huart1;
+extern UART_HandleTypeDef huart3;
 /* USER CODE BEGIN EV */
 extern u8 UART_u8RX_BUFFER[1];
 
@@ -229,11 +230,31 @@ void USART1_IRQHandler(void)
   /* USER CODE END USART1_IRQn 1 */
 }
 
+/**
+  * @brief This function handles USART3 global interrupt.
+  */
+void USART3_IRQHandler(void)
+{
+  /* USER CODE BEGIN USART3_IRQn 0 */
+
+  /* USER CODE END USART3_IRQn 0 */
+  HAL_UART_IRQHandler(&huart3);
+  /* USER CODE BEGIN USART3_IRQn 1 */
+  HAL_UART_Receive_IT(&huart3, UART_u8RX_BUFFER, 1);
+
+  /* USER CODE END USART3_IRQn 1 */
+}
+
 /* USER CODE BEGIN 1 */
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
     if (huart->Instance == USART1)
+    {
+        /* add logic here */
+        BSP_RECEIVE_u8Parse_Protocol(UART_u8RX_BUFFER[0]);
+    }
+    else if(huart->Instance == USART3)
     {
         /* add logic here */
         BSP_RECEIVE_u8Parse_Protocol(UART_u8RX_BUFFER[0]);
