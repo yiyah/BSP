@@ -128,12 +128,14 @@ int main(void)
             /* It comes in once every 5~6ms */
             // log_d("asdf\n");
             // log_d("pitch = %f, roll = %f, yaw = %f\n", (pitch),  (roll),  (yaw));
-            printf(":%.2f,%.2f,%.2f\n", g_f32pitch, g_f32roll, g_f32yaw);
+            // printf3(":%.2f,%.2f,%.2f\n", g_f32pitch, g_f32roll, g_f32yaw);
+            printf3(":%d,%d,%d\n", (s32)g_f32pitch*100, (s32)g_f32roll*100, (s32)g_f32yaw*100);
         }
         ret = BSP_RECEIVE_u8GetBuffer(&pdata);
         if (ret != -1)
         {
-            // printf(":%d: %s\n", ret, pdata);
+            // printf3("33:%d: %s\n", ret, pdata);
+            // printf("1111:%d: %s\n", ret, pdata);
             car_app(pdata, ret);
         }
         if (loop5ms_flag == 1)
@@ -141,7 +143,7 @@ int main(void)
             // printf("1:%d,%d,%ld\n", s16l_curCounter, s16l_target, HAL_GetTick());
             loop5ms_flag = 0;
         }
-        // BSP_LED_Toggle(LED_BLUE);
+        BSP_LED_Toggle(LED_BLUE);
         // HAL_Delay(1);
     /* USER CODE END WHILE */
 
