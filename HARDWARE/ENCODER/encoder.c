@@ -85,8 +85,8 @@ static ENCODER_t encoder[2] = {
     [RIGHT] = {&htim4, TIM_CHANNEL_1, TIM_CHANNEL_2}
 };
 
-FILTER_TypeDef g_filter[2] = {0};
-f32 f32filterArrayCNTs[2][FILTER_SIZE] = {0};
+static FILTER_TypeDef g_filter[2] = {0};
+static f32 f32filterArrayCNTs[2][FILTER_SIZE] = {0};
 
 /**
   * @}
