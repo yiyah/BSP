@@ -3,6 +3,7 @@
 #include "stm32f1xx_hal.h"                  /*!< for HAL_Delay() */
 #include "types.h"
 #include "iic.h"
+#include "filter.h"
 #include "inv_mpu.h"
 #include "inv_mpu_dmp_motion_driver.h"
 #include "mpu6050.h"
@@ -71,6 +72,9 @@
 /**
   * @}
   */
+
+#define FILTER_SIZE         6U
+
 /**
   * @}
   */
@@ -125,6 +129,15 @@ static signed char gyro_orientation[9] = {-1, 0, 0,
  *                  mpu6050.read(reg, len, *data);
 */
 IIC_device_t mpu6050;
+
+/**
+ * @brief filter for roll, pitch and yaw value
+ * [0]: roll
+ * [1]: pitch
+ * [2]: yaw
+ */
+static FILTER_TypeDef g_filter[3] = {0};
+static f32 f32filterArrayCNTs[3][FILTER_SIZE] = {0};
 
 /**
  * @}
@@ -343,6 +356,10 @@ u8 BSP_MPU6050_DMP_Get_Angle(f32 *pitch, f32 *roll, f32 *yaw)
             *roll  = RAD2DEG(asin(-2 * q1 * q3 + 2 * q0 * q2));
             *pitch = RAD2DEG(atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2 * q2 + 1));
             *yaw   = RAD2DEG(atan2(2 * (q1 * q2 + q0 * q3), q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3));
+
+            *roll = UTIL_f32MoveAverageFilter(&g_filter[0], *roll, FILTER_SIZE);
+            *pitch = UTIL_f32MoveAverageFilter(&g_filter[1], *pitch, FILTER_SIZE);
+            *yaw = UTIL_f32MoveAverageFilter(&g_filter[2], *yaw, FILTER_SIZE);
         }
         else
         {
@@ -377,7 +394,12 @@ u8 BSP_MPU6050_Init()
 
     BSP_MPU6050_HW_Init();
     BSP_MPU6050_SW_Reset();
-
+    for (u8 i = 0; i < 3; i++)
+    {
+        g_filter[i].u8Len = 0;
+        g_filter[i].pf32data = f32filterArrayCNTs[i];
+        g_filter[i].f32Sum = 0;
+    }
     /* check device if connected */
     if (MPU6050_DEV_ADDR == BSP_MPU6050_Get_DeviceID())
     {

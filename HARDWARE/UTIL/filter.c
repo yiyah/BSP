@@ -19,7 +19,7 @@
 /* Private functions ---------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 
-f32 UTIL_f32MoveAverageFilter(FILTER_TypeDef *filter, f32 value, u8 filterSize)
+f32 UTIL_f32MoveAverageFilter(FILTER_TypeDef *filter, const f32 value, const u8 filterSize)
 {
     f32 res = 0.0F;
 
