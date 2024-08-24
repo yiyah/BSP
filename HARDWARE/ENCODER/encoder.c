@@ -86,7 +86,7 @@ static ENCODER_t encoder[2] = {
 };
 
 FILTER_TypeDef g_filter[2] = {0};
-s16 s16filterArrayCNTs[2][FILTER_SIZE] = {0};// 确认这个是不是初始化全0
+f32 f32filterArrayCNTs[2][FILTER_SIZE] = {0};
 
 /**
   * @}
@@ -111,8 +111,8 @@ void BSP_InitEncoder()
     for (u8 i = 0; i < 2; i++)
     {
         g_filter[i].u8Len = 0;
-        g_filter[i].ps16data = s16filterArrayCNTs[i];
-        g_filter[i].s32Sum = 0;
+        g_filter[i].pf32data = f32filterArrayCNTs[i];
+        g_filter[i].f32Sum = 0;
     }
 }
 
@@ -144,8 +144,8 @@ void BSP_Get_FilterCount(s16 *s16L_filterCNT, s16 *s16R_filterCNT)
 
     BSP_Get_Encoder_Count_PerUnitTime(&s16L_cnt, &s16R_cnt);
 
-    *s16L_filterCNT = UTIL_s16MoveAverageFilter(&g_filter[LEFT], s16L_cnt, FILTER_SIZE);
-    *s16R_filterCNT = UTIL_s16MoveAverageFilter(&g_filter[RIGHT], s16R_cnt, FILTER_SIZE);
+    *s16L_filterCNT = (s16)UTIL_f32MoveAverageFilter(&g_filter[LEFT], (f32)s16L_cnt, FILTER_SIZE);
+    *s16R_filterCNT = (s16)UTIL_f32MoveAverageFilter(&g_filter[RIGHT], (f32)s16R_cnt, FILTER_SIZE);
 }
 /**
   * @}
