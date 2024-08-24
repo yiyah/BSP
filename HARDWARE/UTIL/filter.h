@@ -7,13 +7,13 @@
 typedef struct filter
 {
     u8  u8Len;
-    s16 *ps16data;
-    s32  s32Sum;
+    f32 *pf32data;
+    f32  f32Sum;
 } FILTER_TypeDef;
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
-s16 UTIL_s16MoveAverageFilter(FILTER_TypeDef *filter, s16 value, u8 filterSize);
+f32 UTIL_f32MoveAverageFilter(FILTER_TypeDef *filter, f32 value, u8 filterSize);
 
 /* Private types -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
