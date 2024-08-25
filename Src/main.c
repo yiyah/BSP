@@ -50,6 +50,9 @@ s16 s16l_target = 0, s16r_target = 0;
 s16 s16l_curCounter = 0, s16r_curCounter = 0;
 u8 loop5ms_flag = 0;
 float g_f32pitch = 0.0, g_f32roll = 0.0, g_f32yaw = 0.0;
+s16 s16L_output = 0;
+s16 s16R_output = 0;
+s16 s16Final_pwm = 0;
 
 /* USER CODE END PV */
 
@@ -76,6 +79,8 @@ static void Setup_Hardware()
   * @brief  The application entry point.
   * @retval int
   */
+extern void test111(void);
+
 int main(void)
 {
   /* USER CODE BEGIN 1 */
@@ -103,7 +108,7 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM2_Init();
   MX_TIM4_Init();
-  MX_TIM3_Init();
+//   MX_TIM3_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   BSP_LED_ON(LED_BLUE);
@@ -111,8 +116,15 @@ int main(void)
   BSP_LED_OFF(LED_BLUE);
   Setup_Hardware();
   car_Init();
-  HAL_TIM_Base_Start_IT(&htim3);
   BSP_RECEIVE_vInit();
+  // wait mpu6050 data stable
+  HAL_Delay(5000);
+  while (0 != BSP_MPU6050_DMP_Get_Angle(&g_f32pitch, &g_f32roll, &g_f32yaw))
+  {
+    /* code */
+  }
+
+//   HAL_TIM_Base_Start_IT(&htim3);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -125,11 +137,13 @@ int main(void)
         // BSP_SetMotorPWM(0, 20);
         if(0 == BSP_MPU6050_DMP_Get_Angle(&g_f32pitch, &g_f32roll, &g_f32yaw))
         {
+            test111();
             /* It comes in once every 5~6ms */
             // log_d("asdf\n");
             // log_d("pitch = %f, roll = %f, yaw = %f\n", (pitch),  (roll),  (yaw));
             // printf3(":%.2f,%.2f,%.2f\n", g_f32pitch, g_f32roll, g_f32yaw);
-            printf3(":%d,%d,%d\n", (s32)g_f32pitch*100, (s32)g_f32roll*100, (s32)g_f32yaw*100);
+            // printf3(":%d,%d,%d\n", (s32)g_f32pitch*100, (s32)g_f32roll*100, (s32)g_f32yaw*100);
+            printf3(":%d,%d\n", (s32)(g_f32pitch*100), s16Final_pwm);
         }
         ret = BSP_RECEIVE_u8GetBuffer(&pdata);
         if (ret != -1)
