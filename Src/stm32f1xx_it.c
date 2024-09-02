@@ -22,6 +22,7 @@
 #include "stm32f1xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "math.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -31,6 +32,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define MIDLE_POING 7.5F
 
 /* USER CODE END PD */
 
@@ -63,7 +65,9 @@ extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart3;
 /* USER CODE BEGIN EV */
 extern u8 UART_u8RX_BUFFER[1];
-
+extern s16 s16L_output;
+extern s16 s16R_output;
+extern s16 s16Final_pwm;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -203,29 +207,47 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f1xx.s).                    */
 /******************************************************************************/
-
 /**
   * @brief This function handles TIM3 global interrupt.
   */
-void TIM3_IRQHandler(void)
+// void TIM3_IRQHandler(void)
+void test111(void)
 {
   /* USER CODE BEGIN TIM3_IRQn 0 */
-  s16 s16L_output = 0;
-  s16 s16R_output = 0;
-  
+  f32 f32abs_curPitch = fabs(g_f32pitch);
+  s16 counter = 0;
+  s16 s16stand_output = 0;
 
   loop5ms_flag = 1;
-  s16l_target = CAR_f32KeepStandUP(0, g_f32pitch);
-  s16r_target = s16l_target;
-  BSP_Get_FilterCount(&s16l_curCounter, &s16r_curCounter);
+  s16L_output = 0;
+  s16R_output = 0;
+  s16stand_output = 0;
+  BSP_Get_FilterCount(&s16l_curCounter, &s16r_curCounter); 
+  s16Final_pwm = 0;
+  counter = (s16l_curCounter+s16r_curCounter);
+  if (f32abs_curPitch < 50.0F)
+  {
+      s16stand_output = CAR_f32KeepStandUP(MIDLE_POING, g_f32pitch);
+      control(0, 0, counter, counter,
+              &s16L_output, &s16R_output);
+  }
+  else
+  {
+  }
+  s16Final_pwm = s16L_output + s16stand_output;
+  if(s16Final_pwm > 7200)
+  {
+      s16Final_pwm = 7200;
+  }
+  else if (s16Final_pwm < -7200)
+  {
+      s16Final_pwm = -7200;
+  }
 
-  // pass to control()
-  control(s16l_target, s16r_target, s16l_curCounter, s16r_curCounter,
-          &s16L_output, &s16R_output);
   // set output to motor
-  BSP_SetMotorPWMPulse(s16L_output, s16R_output);
+  BSP_SetMotorPWMPulse(s16Final_pwm, s16Final_pwm);
   /* USER CODE END TIM3_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim3);
+//   HAL_TIM_IRQHandler(&htim3);
   /* USER CODE BEGIN TIM3_IRQn 1 */
 
   /* USER CODE END TIM3_IRQn 1 */
