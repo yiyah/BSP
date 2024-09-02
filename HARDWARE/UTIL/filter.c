@@ -46,15 +46,6 @@ f32 UTIL_f32MoveAverageFilter(FILTER_TypeDef *filter, const f32 value, const u8 
     }
     res = filter->f32Sum / filter->u8Len;
 
-    /* Rounding */
-    if (res > 0.0)
-    {
-        res += 0.5;
-    }
-    else
-    {
-        res -= 0.5;
-    }
     return res;
 }
 
