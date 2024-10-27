@@ -53,6 +53,15 @@ HARDWARE/MOTOR/motor.c \
 HARDWARE/ENCODER/encoder.c \
 HARDWARE/receive/receive.c \
 HARDWARE/UTIL/filter.c \
+RTOS/croutine.c \
+RTOS/event_groups.c \
+RTOS/list.c \
+RTOS/queue.c \
+RTOS/stream_buffer.c \
+RTOS/tasks.c \
+RTOS/timers.c \
+RTOS/portable/GCC/ARM_CM3/port.c \
+RTOS/portable/MemMang/heap_4.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c \
@@ -137,6 +146,8 @@ C_INCLUDES =  \
 -IHARDWARE/MOTOR \
 -IHARDWARE/ENCODER \
 -IHARDWARE/receive \
+-IRTOS/include \
+-IRTOS/portable/GCC/ARM_CM3 \
 -IDrivers/STM32F1xx_HAL_Driver/Inc \
 -IDrivers/STM32F1xx_HAL_Driver/Inc/Legacy \
 -IDrivers/CMSIS/Device/ST/STM32F1xx/Include \
@@ -204,7 +215,7 @@ $(BUILD_DIR):
 
 
 download: all
-	openocd -f interface/cmsis-dap.cfg -f target/stm32f1x.cfg -c "transport select swd" -c init -c "reset halt;wait_halt;flash write_image erase $(shell pwd)/build/${PROJECT}.elf" -c reset -c shutdown
+	openocd -f interface/cmsis-dap.cfg -f target/stm32f1x.cfg -c "transport select swd" -c init -c "reset halt;wait_halt;flash write_image erase $(shell pwd)/build/${TARGET}.elf" -c reset -c shutdown
 
 doxygen:
 	doxygen doxygen/Doxyfile

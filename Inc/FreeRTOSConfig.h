@@ -118,4 +118,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
     #define xPortGetFreeHeapSize               ( x )
 #endif
 
+#define vPortSVCHandler SVC_Handler
+#define xPortPendSVHandler PendSV_Handler
 #endif /* FREERTOS_CONFIG_H */

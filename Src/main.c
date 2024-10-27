@@ -26,6 +26,8 @@
 /* USER CODE BEGIN Includes */
 #include "bsp.h"
 #include "stdio.h"
+#include "FreeRTOS.h"
+#include "task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,12 +49,22 @@
 
 /* USER CODE BEGIN PV */
 s16 l,r, lc, rc;
+TaskHandle_t taskH;
+StackType_t task1StackBuffer[128];
+StaticTask_t task1Buffer;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+static void prvCheckTask( void * pvParameters )
+{
+    while (1)
+    {
+        BSP_LED_Toggle(LED_BLUE);
+        vTaskDelay( 1000 );
+    }
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -99,14 +111,14 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM2_Init();
   MX_TIM4_Init();
-  MX_TIM3_Init();
+//   MX_TIM3_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   BSP_LED_ON(LED_BLUE);
   HAL_Delay(200);
   BSP_LED_OFF(LED_BLUE);
   Setup_Hardware();
-  HAL_TIM_Base_Start_IT(&htim3);
+//   HAL_TIM_Base_Start_IT(&htim3);
   BSP_RECEIVE_vInit();
   /* USER CODE END 2 */
 
@@ -114,6 +126,13 @@ int main(void)
   /* USER CODE BEGIN WHILE */
     s8 ret = 0;
     u8 *pdata = NULL;
+    
+    // xTaskCreate( prvCheckTask, "Check", 128, NULL, 8, &taskH );
+    xTaskCreateStatic(prvCheckTask, "chcek", 128, NULL, 8,
+    (StackType_t *)task1StackBuffer, (StaticTask_t *)&task1Buffer);
+    vTaskStartScheduler();
+
+    while(1);
     while (1)
     {
         // BSP_SetMotorPWMPulse(l, r);
@@ -178,7 +197,43 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void vAssertCalled( void )
+{
+    volatile unsigned long looping = 0;
 
+    taskENTER_CRITICAL();
+    {
+        /* Use the debugger to set ul to a non-zero value in order to step out
+         *      of this function to determine why it was called. */
+        while( looping == 0LU )
+        {
+            portNOP();
+        }
+    }
+    taskEXIT_CRITICAL();
+}
+
+StaticTask_t Idle_Task_TCB;
+StaticTask_t Timer_Task_TCB;
+StackType_t Idle_Task_Stack[configMINIMAL_STACK_SIZE];
+StackType_t Timer_Task_Stack[configMINIMAL_STACK_SIZE];
+void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
+                                    StackType_t ** ppxIdleTaskStackBuffer,
+                                    uint32_t * pulIdleTaskStackSize )
+{
+    *ppxIdleTaskTCBBuffer = &Idle_Task_TCB;
+    *ppxIdleTaskStackBuffer = &Idle_Task_Stack;
+    *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+}
+
+void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer,
+                                    StackType_t **ppxTimerTaskStackBuffer,
+                                    uint32_t *pulTimerTaskStackSize)
+{
+    *ppxTimerTaskTCBBuffer = &Timer_Task_TCB;
+    *ppxTimerTaskStackBuffer = &Timer_Task_Stack;
+    *pulTimerTaskStackSize = configMINIMAL_STACK_SIZE;
+}
 /* USER CODE END 4 */
 
 /**
@@ -196,6 +251,10 @@ void Error_Handler(void)
   /* USER CODE END Error_Handler_Debug */
 }
 
+void vApplicationIdleHook( void )
+{
+    log_w("test\n");
+}
 #ifdef  USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
