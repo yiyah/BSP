@@ -49,9 +49,10 @@
 
 /* USER CODE BEGIN PV */
 s16 l,r, lc, rc;
-TaskHandle_t taskH;
+TaskHandle_t g_xlog;
 StackType_t task1StackBuffer[128];
 StaticTask_t task1Buffer;
+uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -62,6 +63,15 @@ static void prvCheckTask( void * pvParameters )
     while (1)
     {
         BSP_LED_Toggle(LED_BLUE);
+        vTaskDelay( 500 );
+    }
+}
+static void logTask( void * pvParameters )
+{
+    while (1)
+    {
+        // BSP_LED_Toggle(LED_BLUE);
+        log_i("in log task\n");
         vTaskDelay( 1000 );
     }
 }
@@ -127,7 +137,7 @@ int main(void)
     s8 ret = 0;
     u8 *pdata = NULL;
     
-    // xTaskCreate( prvCheckTask, "Check", 128, NULL, 8, &taskH );
+    xTaskCreate( logTask, "logTask", 128, NULL, 7, &g_xlog );
     xTaskCreateStatic(prvCheckTask, "chcek", 128, NULL, 8,
     (StackType_t *)task1StackBuffer, (StaticTask_t *)&task1Buffer);
     vTaskStartScheduler();
@@ -253,7 +263,7 @@ void Error_Handler(void)
 
 void vApplicationIdleHook( void )
 {
-    log_w("test\n");
+    log_w("idle test\n");
 }
 #ifdef  USE_FULL_ASSERT
 /**
