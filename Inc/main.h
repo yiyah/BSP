@@ -60,6 +60,9 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define MX_LED_BLUE_Pin GPIO_PIN_4
 #define MX_LED_BLUE_GPIO_Port GPIOA
+#define KEY1_Pin GPIO_PIN_5
+#define KEY1_GPIO_Port GPIOA
+#define KEY1_EXTI_IRQn EXTI9_5_IRQn
 #define MX_MOTOR_BIN2_Pin GPIO_PIN_12
 #define MX_MOTOR_BIN2_GPIO_Port GPIOB
 #define MX_MOTOR_BIN1_Pin GPIO_PIN_13
