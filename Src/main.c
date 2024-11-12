@@ -47,6 +47,9 @@
 
 /* USER CODE BEGIN PV */
 s16 l,r, lc, rc;
+u8 state = 0;
+
+extern void gpio_write(GPIO_PinState state);
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -116,20 +119,21 @@ int main(void)
     u8 *pdata = NULL;
     while (1)
     {
+        gpio_write(state);
         // BSP_SetMotorPWMPulse(l, r);
         // BSP_SetMotorPWM(0, 20);
-        if(0 == BSP_MPU6050_DMP_Get_Angle(&pitch, &roll, &yaw))
-        {
-            /* It comes in once every 5~6ms */
-            // log_d("asdf\n");
-            // log_d("pitch = %f, roll = %f, yaw = %f\n", (pitch),  (roll),  (yaw));
-        }
-        ret = BSP_RECEIVE_u8GetBuffer(&pdata);
-        if (ret != -1)
-        {
-            printf(":%d: %s\n", ret, pdata);
-        }
-        BSP_LED_Toggle(LED_BLUE);
+        // if(0 == BSP_MPU6050_DMP_Get_Angle(&pitch, &roll, &yaw))
+        // {
+        //     /* It comes in once every 5~6ms */
+        //     // log_d("asdf\n");
+        //     // log_d("pitch = %f, roll = %f, yaw = %f\n", (pitch),  (roll),  (yaw));
+        // }
+        // ret = BSP_RECEIVE_u8GetBuffer(&pdata);
+        // if (ret != -1)
+        // {
+        //     printf(":%d: %s\n", ret, pdata);
+        // }
+        // BSP_LED_Toggle(LED_BLUE);
         // HAL_Delay(1);
     /* USER CODE END WHILE */
 
